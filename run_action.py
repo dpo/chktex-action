@@ -107,6 +107,9 @@ if __name__ == "__main__":
     else:
         def chktex_command(file): return ["chktex", "-q", "--inputfiles=0", "-o", chktex_output, file]
 
+    print("top path = " + GITHUB_WORKSPACE)
+    with open(os.path.join(GITHUB_WORKSPACE, chktex_output), 'r') as fin:
+        print(fin.read())
 #     failing_file_info = failing_files(files_to_process, chktex_command)
 #     if failing_file_info:
 #         for failing_file_details in failing_file_info:
