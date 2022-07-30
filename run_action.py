@@ -103,9 +103,9 @@ if __name__ == "__main__":
     chktex_output = os.path.join(GITHUB_WORKSPACE, "chktex_output.txt")
     if chktexrc:
         print("Found local chktexrc")
-        def chktex_command(file): return ["chktex", "-q", "--inputfiles=0", "-l", chktexrc, "-o", chktex_output, file]
+        def chktex_command(file): return ["chktex", "--inputfiles=0", "-l", chktexrc, "-o", chktex_output, file]
     else:
-        def chktex_command(file): return ["chktex", "-q", "--inputfiles=0", "-o", chktex_output, file]
+        def chktex_command(file): return ["chktex", "--inputfiles=0", "-o", chktex_output, file]
 
     print("top path = " + GITHUB_WORKSPACE)
     with open(chktex_output, 'r') as fin:
