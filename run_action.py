@@ -102,9 +102,10 @@ if __name__ == "__main__":
     chktexrc = find_chktexrc(github_workspace_path=GITHUB_WORKSPACE)
     chktex_output = os.path.join(GITHUB_WORKSPACE, "chktex_output.txt")
     if chktexrc:
-        print("Found local chktexrc")
+        print("Found local chktexrc at ", chktexrc)
         def chktex_command(file): return ["chktex", "--inputfiles=0", "-l", chktexrc, "-o", chktex_output, file]
     else:
+        print("Found no local chktekrc")
         def chktex_command(file): return ["chktex", "--inputfiles=0", "-o", chktex_output, file]
 
     failing_file_info = failing_files(files_to_process, chktex_command)
