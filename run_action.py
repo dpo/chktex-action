@@ -4,6 +4,7 @@ import os
 import subprocess
 import sys
 from dataclasses import dataclass
+from pathlib import Path
 
 
 SKIP_DIRS = set(["venv", ".git", "__pycache__"])
@@ -30,16 +31,16 @@ def find_files_to_process(github_workspace_path=None, skip_dirs=SKIP_DIRS):
     return [file for file in all_files_in_tree if file.endswith(".tex")]
 
 
-def find_chktexrc(github_workspace_path=None, chktexrc_filename=CHKTEXRC_FILENAME):
+def find_chktexrc(github_workspace_path, chktexrc_filename=CHKTEXRC_FILENAME):
     '''
-    Return the absolute path of a chktexrc file in the workspace, if one
-    exists. Otherwise return None.
+    Return the absolute path of the first chktexrc file in the workspace, if one
+    exists. Otherwise return None. The workspace is searched recursively.
     '''
-    os.chdir(github_workspace_path)
-    chktexrc = os.path.abspath(chktexrc_filename)
-    if os.path.exists(chktexrc):
+    chktexrc_maybe = Path(github_workspace_path).rglob(chktexrc_filename)
+    try:
+        chktexrc = next(chktexrc_maybe)
         return chktexrc
-    else:
+    except:
         return None
 
 
@@ -99,7 +100,7 @@ if __name__ == "__main__":
         print("Found no .tex files to process")
         sys.exit(0)
 
-    chktexrc = find_chktexrc(github_workspace_path=GITHUB_WORKSPACE)
+    chktexrc = find_chktexrc(GITHUB_WORKSPACE)
     chktex_output = os.path.join(GITHUB_WORKSPACE, "chktex_output.txt")
     if chktexrc:
         print("Found local chktexrc at ", chktexrc)
