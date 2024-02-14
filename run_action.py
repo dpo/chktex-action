@@ -60,6 +60,7 @@ def failing_files(files_to_process=None, chktex_command=None):
     error_details = []
 
     for file in files_to_process:
+        print("Processing ", file)
         directory = os.path.dirname(file)
         relative_file = os.path.basename(file)
 
@@ -73,6 +74,9 @@ def failing_files(files_to_process=None, chktex_command=None):
         )
         stdout = completed_process.stdout
         stderr = completed_process.stderr
+
+        print("stdout: ", stdout)
+        print("stderr: ", stderr)
 
         result = Result(
             filename=file,
