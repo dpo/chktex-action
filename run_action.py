@@ -100,6 +100,8 @@ if __name__ == "__main__":
         print("Found no .tex files to process")
         sys.exit(0)
 
+    print("Processing files ", files_to_process)
+
     chktexrc = find_chktexrc(GITHUB_WORKSPACE)
     chktex_output = os.path.join(GITHUB_WORKSPACE, "chktex_output.txt")
     if chktexrc:
