@@ -48,11 +48,11 @@ def find_chktexrc(github_workspace_path, chktexrc_filename=CHKTEXRC_FILENAME):
 class Result:
     filename: str
     success: bool
-    stdout: str
-    stderr: str
+    # stdout: str
+    # stderr: str
 
 
-def failing_files(files_to_process=None, chktex_command=None):
+def failing_files(chktex_output, chktex_command, files_to_process=[]):
     '''
     Run the given chktex command on the list of files, and return a list of
     details for the runs that failed.
@@ -65,28 +65,26 @@ def failing_files(files_to_process=None, chktex_command=None):
         relative_file = os.path.basename(file)
 
         # run process inside the file's folder
-        completed_process = subprocess.run(
-            chktex_command(relative_file),
-            cwd=directory,
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        stdout = completed_process.stdout
-        stderr = completed_process.stderr
+        with open(chktex_output, "a") as outfile:
+            completed_process = subprocess.run(
+                chktex_command(relative_file),
+                cwd=directory,
+                # capture_output=True,
+                stdout=outfile,
+                stderr=outfile,
+                text=True,
+                check=False,
+            )
 
-        print("stdout: ", stdout)
-        print("stderr: ", stderr)
+            result = Result(
+                filename=file,
+                success=len(stderr) == 0,
+                # stdout=stdout,
+                # stderr=stderr
+            )
 
-        result = Result(
-            filename=file,
-            success=len(stdout) + len(stderr) == 0,
-            stdout=stdout,
-            stderr=stderr
-        )
-
-        if not result.success:
-            error_details.append(result)
+            if not result.success:
+                error_details.append(result)
 
     return error_details
 
@@ -110,12 +108,12 @@ if __name__ == "__main__":
     chktex_output = os.path.join(GITHUB_WORKSPACE, "chktex_output.txt")
     if chktexrc:
         print("Found local chktexrc at ", chktexrc)
-        def chktex_command(file): return ["chktex", "--inputfiles=0", "-l", chktexrc, "-o", chktex_output, file]
+        def chktex_command(file): return ["chktex", "-q", "--inputfiles=0", "-l", chktexrc, file]
     else:
         print("Found no local chktekrc")
-        def chktex_command(file): return ["chktex", "--inputfiles=0", "-o", chktex_output, file]
+        def chktex_command(file): return ["chktex", "-q", "--inputfiles=0", file]
 
-    failing_file_info = failing_files(files_to_process, chktex_command)
+    failing_file_info = failing_files(chktex_output, chktex_command, files_to_process)
     print("top path = " + GITHUB_WORKSPACE)
     with open(chktex_output, 'r') as fin:
         print(fin.read())
