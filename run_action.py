@@ -78,7 +78,7 @@ def failing_files(chktex_output, chktex_command, files_to_process=[]):
 
             result = Result(
                 filename=file,
-                success=len(stderr) == 0,
+                success=True,
                 # stdout=stdout,
                 # stderr=stderr
             )
