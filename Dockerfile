@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:mantic
 
 LABEL "com.github.actions.name"="LaTeX linter (chktex)"
 LABEL "com.github.actions.description"="Detect stylistic errors in a LaTeX document"
