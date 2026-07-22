@@ -16,7 +16,7 @@ COPY requirements.txt .
 RUN apt-get update -yqq && \
   apt-get install -yqq \
   chktex \
-  python3.7 \
+  python3 \
   python3-pip && \
   rm -rf /var/lib/apt/lists/* && \
   pip3 install --break-system-packages -r requirements.txt
